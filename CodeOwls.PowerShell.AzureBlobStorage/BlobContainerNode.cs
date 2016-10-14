@@ -15,12 +15,14 @@ namespace CodeOwls.PowerShell.AzureBlobStorage
             _container = container;
         }
 
+        public override string Name => _container.Name;
+
         public override IEnumerable<IPathNode> GetNodeChildren(IProviderContext providerContext)
         {
             var blobs = _container.ListBlobs();
             var pathNodes = new List<IPathNode>();
 
-            var dirPathNodes = blobs.OfType<CloudBlobDirectory>().ToList().ConvertAll(a => new BlobBlockNode(a));
+            var dirPathNodes = blobs.OfType<CloudBlobDirectory>().ToList().ConvertAll(a => new BlobDirectoryNode(a));
             var blockPathNodes = blobs.OfType<CloudBlockBlob>().ToList().ConvertAll(a => new BlobBlockNode(a));
 
             pathNodes.AddRange(dirPathNodes);
@@ -33,7 +35,5 @@ namespace CodeOwls.PowerShell.AzureBlobStorage
         {
             return new ContainerPathValue(_container, Name);
         }
-
-        public override string Name => _container.Name;
     }
 }

@@ -1,35 +1,57 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Automation.Provider;
+using System.Text.RegularExpressions;
+using CodeOwls.PowerShell.Paths;
 using CodeOwls.PowerShell.Provider.PathNodeProcessors;
 using CodeOwls.PowerShell.Provider.PathNodes;
 using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace CodeOwls.PowerShell.AzureBlobStorage
 {
-    public abstract class BlobNode : PathNodeBase
+    public abstract class BlobNode : PathNodeBase, IGetItemContent
     {
-        private readonly IListBlobItem _blobItem;
-        private readonly string _name;
         private readonly bool _isDirectory;
+        private readonly string _name;
+        protected readonly IListBlobItem BlobItem;
 
-        protected BlobNode( IListBlobItem blobItem )
+        protected BlobNode(IListBlobItem blobItem)
         {
-            _blobItem = blobItem;
+            BlobItem = blobItem;
             _isDirectory = false;
-            if (_blobItem is CloudBlobDirectory)
+            if (BlobItem is CloudBlobDirectory)
             {
-                _name = ((CloudBlobDirectory) _blobItem).Prefix.TrimEnd('/','\\');
+                _name = ((CloudBlobDirectory) BlobItem).Prefix.TrimEnd('/', '\\');
                 _isDirectory = true;
             }
-            else if (_blobItem is CloudBlob)
+            else if (BlobItem is CloudBlob)
             {
-                _name = ((CloudBlob)blobItem).Name;
+                _name = ((CloudBlob) blobItem).Name;
             }
+
+            var re = new Regex(@".+\/");
+            _name = re.Replace(_name, string.Empty);
+        }
+
+        public override string Name
+        {
+            get { return _name; }
+        }
+
+        public virtual IContentReader GetContentReader(IProviderContext providerContext)
+        {
+            throw new NotSupportedException();
+        }
+
+        public object GetContentReaderDynamicParameters(IProviderContext providerContext)
+        {
+            return new ContentReaderDynamicParameters();
         }
 
         public override IEnumerable<IPathNode> GetNodeChildren(IProviderContext providerContext)
         {
-            CloudBlobDirectory directory = _blobItem as CloudBlobDirectory;
+            var directory = BlobItem as CloudBlobDirectory;
             if (null == directory)
             {
                 return null;
@@ -50,9 +72,7 @@ namespace CodeOwls.PowerShell.AzureBlobStorage
 
         public override IPathValue GetNodeValue()
         {
-            return new PathValue( _blobItem, Name, _isDirectory );
+            return new PathValue(BlobItem, Name, _isDirectory);
         }
-
-        public override string Name { get { return _name; } }
     }
 }

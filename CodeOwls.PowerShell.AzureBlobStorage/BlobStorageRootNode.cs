@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using CodeOwls.PowerShell.Provider.PathNodeProcessors;
@@ -10,11 +9,13 @@ namespace CodeOwls.PowerShell.AzureBlobStorage
     public class BlobStorageRootNode : PathNodeBase
     {
         private readonly CloudBlobClient _client;
-        
+
         public BlobStorageRootNode(CloudBlobClient client)
         {
             _client = client;
         }
+
+        public override string Name => string.Empty;
 
         public override IEnumerable<IPathNode> GetNodeChildren(IProviderContext providerContext)
         {
@@ -27,9 +28,7 @@ namespace CodeOwls.PowerShell.AzureBlobStorage
 
         public override IPathValue GetNodeValue()
         {
-            return new ContainerPathValue(_client, String.Empty );
+            return new ContainerPathValue(_client, string.Empty);
         }
-
-        public override string Name => String.Empty;
     }
 }
