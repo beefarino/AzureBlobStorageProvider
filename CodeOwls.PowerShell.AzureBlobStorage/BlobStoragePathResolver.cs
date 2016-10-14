@@ -13,7 +13,7 @@ namespace CodeOwls.PowerShell.AzureBlobStorage
 
         protected override IPathNode Root
         {
-            get { return new BlobStorageRootNode(_client); }
+            get { return new BlobStorageRootPathNode(_client); }
         }
 
         public override IEnumerable<IPathNode> ResolvePath(IProviderContext providerContext, string path)

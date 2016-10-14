@@ -8,49 +8,27 @@ namespace CodeOwls.PowerShell.AzureBlobStorage
     internal class BlobBlockBinaryContentReader : IContentReader
     {
         private BinaryReader _reader;
-        private MemoryStream _stream;
 
         public BlobBlockBinaryContentReader(IListBlobItem item)
         {
-            _stream = new MemoryStream();
-
             var blob = (CloudBlockBlob) item;
-            blob.DownloadToStream(_stream);
-            _stream.Position = 0;
-
-            _reader = new BinaryReader(_stream);
+            
+            _reader = new BinaryReader(blob.OpenRead());
         }
 
         public void Dispose()
         {
             // note: this method never appears to be called by PowerShell
-            try
-            {
-                _stream.Dispose();
-                _reader.Dispose();
-            }
-            catch
-            {
-            }
-            finally
-            {
-                _stream = null;
-                _reader = null;
-            }
+            Close();
         }
 
         public IList Read(long readCount)
         {
-            if (null == _stream)
-            {
-                return null;
-            }
-
             byte[] buffer = null;
 
             if (0 == readCount)
             {
-                buffer = _stream.ToArray();
+                buffer = _reader.ReadBytes( (int) _reader.BaseStream.Length );
             }
             else
             {
@@ -68,9 +46,13 @@ namespace CodeOwls.PowerShell.AzureBlobStorage
 
         public void Close()
         {
+            if (null == _reader)
+            {
+                return;
+            }
+
             try
             {
-                _stream.Close();
                 _reader.Close();
             }
             catch
@@ -79,7 +61,6 @@ namespace CodeOwls.PowerShell.AzureBlobStorage
 
             try
             {
-                _stream.Dispose();
                 _reader.Dispose();
             }
             catch
@@ -87,7 +68,6 @@ namespace CodeOwls.PowerShell.AzureBlobStorage
             }
             finally
             {
-                _stream = null;
                 _reader = null;
             }
         }

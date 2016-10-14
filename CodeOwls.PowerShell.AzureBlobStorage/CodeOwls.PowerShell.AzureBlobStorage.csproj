@@ -85,17 +85,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BlobBlockBinaryContentReader.cs" />
-    <Compile Include="BlobBlockNode.cs" />
-    <Compile Include="BlobContainerNode.cs" />
-    <Compile Include="BlobDirectoryNode.cs" />
-    <Compile Include="BlobNode.cs" />
-    <Compile Include="BlobStorageRootNode.cs" />
+    <Compile Include="Content\BlobBlockBinaryContentReader.cs" />
+    <Compile Include="PathNodes\BlobBlockPathNode.cs" />
+    <Compile Include="PathNodes\BlobContainerPathNode.cs" />
+    <Compile Include="PathNodes\BlobPathDirectoryNode.cs" />
+    <Compile Include="PathNodes\BlobPathNode.cs" />
+    <Compile Include="PathNodes\BlobStorageRootPathNode.cs" />
     <Compile Include="BlobStoragePathResolver.cs" />
     <Compile Include="BlobStorageProvider.cs" />
     <Compile Include="BlobStorageDrive.cs" />
-    <Compile Include="BlobBlockTextContentReader.cs" />
-    <Compile Include="ContentReaderDynamicParameters.cs" />
+    <Compile Include="Content\BlobBlockTextContentReader.cs" />
+    <Compile Include="Content\ContentReaderDynamicParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

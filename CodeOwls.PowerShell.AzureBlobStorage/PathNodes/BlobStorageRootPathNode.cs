@@ -6,11 +6,11 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace CodeOwls.PowerShell.AzureBlobStorage
 {
-    public class BlobStorageRootNode : PathNodeBase
+    public class BlobStorageRootPathNode : PathNodeBase
     {
         private readonly CloudBlobClient _client;
 
-        public BlobStorageRootNode(CloudBlobClient client)
+        public BlobStorageRootPathNode(CloudBlobClient client)
         {
             _client = client;
         }
@@ -21,7 +21,7 @@ namespace CodeOwls.PowerShell.AzureBlobStorage
         {
             var containers = _client.ListContainers();
 
-            var pathNodes = containers.ToList().ConvertAll(a => new BlobContainerNode(a));
+            var pathNodes = containers.ToList().ConvertAll(a => new BlobContainerPathNode(a));
 
             return pathNodes;
         }

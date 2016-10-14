@@ -6,11 +6,11 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace CodeOwls.PowerShell.AzureBlobStorage
 {
-    public class BlobBlockNode : BlobNode
+    public class BlobBlockPathNode : BlobPathNode
     {
         private static string CachedItemMode;
 
-        public BlobBlockNode(IListBlobItem blobItem) : base(blobItem)
+        public BlobBlockPathNode(IListBlobItem blobItem) : base(blobItem)
         {
         }
 

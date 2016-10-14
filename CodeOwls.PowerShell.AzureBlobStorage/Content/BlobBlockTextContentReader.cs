@@ -11,31 +11,20 @@ namespace CodeOwls.PowerShell.AzureBlobStorage
     {
         private readonly ContentReaderDynamicParameters _contentReaderDynamicParameters;
         private StreamReader _reader;
-        private CloudBlockBlob _blob;
 
         public BlobBlockTextContentReader(IListBlobItem item,
             ContentReaderDynamicParameters contentReaderDynamicParameters)
         {
             _contentReaderDynamicParameters = contentReaderDynamicParameters;
 
-            _blob = (CloudBlockBlob) item;
-            _reader = new StreamReader(_blob.OpenRead());
+            var blob = (CloudBlockBlob) item;
+            _reader = new StreamReader(blob.OpenRead());
         }
 
         public void Dispose()
         {
             // note: this method never appears to be called by PowerShell
-            try
-            {
-                _reader.Dispose();
-            }
-            catch
-            {
-            }
-            finally
-            {
-                _reader = null;
-            }
+            Close();
         }
 
         public IList Read(long readCount)
@@ -59,12 +48,42 @@ namespace CodeOwls.PowerShell.AzureBlobStorage
             else
             {
                 while (0 < readCount-- && ! _reader.EndOfStream)
-                {                    
-                    data.Add(_reader.ReadLine());
+                {
+                    string value = ReadDelimitedLine();
+                    data.Add(value);
                 }
             }
 
             return data;
+        }
+
+        private string ReadDelimitedLine()
+        {
+            
+            if (_contentReaderDynamicParameters.Delimiter == Environment.NewLine)
+            {
+                return _reader.ReadLine();
+            }
+
+            StringBuilder builder = new StringBuilder();
+            var delimiter = _contentReaderDynamicParameters.Delimiter;
+            while (!builder.ToString().EndsWith(delimiter))
+            {
+                int read = _reader.Read();
+                if (-1 == read)
+                {
+                    break;
+                }
+                var readChar = (char) read;
+                builder.Append(readChar);
+            }
+
+            var value = builder.ToString();
+            if (value.EndsWith(delimiter))
+            {
+                value = value.Substring(0, value.Length - delimiter.Length);
+            }
+            return value;
         }
 
         public void Seek(long offset, SeekOrigin origin)
@@ -74,6 +93,11 @@ namespace CodeOwls.PowerShell.AzureBlobStorage
 
         public void Close()
         {
+            if (null == _reader)
+            {
+                return;
+            }
+
             try
             {
                 _reader.Close();

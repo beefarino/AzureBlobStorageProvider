@@ -14,6 +14,7 @@ namespace CodeOwls.PowerShell.AzureBlobStorage
                     driveInfo.Credential))
         {
             // example: DefaultEndpointsProtocol=[http|https];AccountName=myAccountName;AccountKey=myAccountKey
+
             Account = CloudStorageAccount.Parse(driveInfo.Root);
             Client = Account.CreateCloudBlobClient();
         }

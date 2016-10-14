@@ -10,13 +10,13 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace CodeOwls.PowerShell.AzureBlobStorage
 {
-    public abstract class BlobNode : PathNodeBase, IGetItemContent
+    public abstract class BlobPathNode : PathNodeBase, IGetItemContent
     {
         private readonly bool _isDirectory;
         private readonly string _name;
         protected readonly IListBlobItem BlobItem;
 
-        protected BlobNode(IListBlobItem blobItem)
+        protected BlobPathNode(IListBlobItem blobItem)
         {
             BlobItem = blobItem;
             _isDirectory = false;
@@ -64,8 +64,8 @@ namespace CodeOwls.PowerShell.AzureBlobStorage
             var blockPathNodes = blobs.ToList();
             blockPathNodes.RemoveAll(m => dirPathNodes.Contains(m));
 
-            pathNodes.AddRange(dirPathNodes.ConvertAll(a => new BlobDirectoryNode(a)));
-            pathNodes.AddRange(blockPathNodes.ConvertAll(a => new BlobBlockNode(a)));
+            pathNodes.AddRange(dirPathNodes.ConvertAll(a => new BlobPathDirectoryNode(a)));
+            pathNodes.AddRange(blockPathNodes.ConvertAll(a => new BlobBlockPathNode(a)));
 
             return pathNodes;
         }
