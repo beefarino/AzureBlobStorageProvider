@@ -3,8 +3,8 @@ A PowerShell Provider for Azure Blob Storage
 
 # Usage Information
 
-At present you'll need to load the DLLs for this provider manually into your PowerShell session.  A container module
-will be added to the project shortly.
+You must import the module AzureBlobStorageProvider to use the blob storage
+provider.
 
 ## Azure Storage Connection Strings
 
@@ -58,118 +58,39 @@ get-content ./mydatafile -delimiter ";"
 Below is a session transcript that demonstrates the provider's basic usage.
 
 ```PowerShell
-PS C:\> ls *.dll | import-module; #import the necessary provider DLLs
+PS C:\> import-module AzureBlobStorageProvider
 PS C:\> new-psdrive -psp blob -name blob -root 'DefaultEndpointsProtocol=https;AccountName=YourAccountName;AccountKey=YourAccessKey'
 PS C:\> cd blob:
 PS blob:\> dir
 
-SSItemMode    : d  <
-PSPath        : ...
-PSParentPath  : ...
-PSChildName   : dataout
-PSDrive       : blob
-PSProvider    : CodeOwls.PowerShell.AzureBlobStorage\Blob
-PSIsContainer : True
-ServiceClient : Microsoft.WindowsAzure.Storage.Blob.CloudBlobClient
-...
+                            Last Modified Type       Name
+----------                  ------------- ----       ----
+d  <          8/17/2016 3:18:25 AM +00:00 Container  dataout
+d  <          7/28/2016 8:57:27 PM +00:00 Container  hadorp
 
-SSItemMode    : d  <
-PSPath        : ...
-PSParentPath  : ...
-PSChildName   : hadorp
-PSDrive       : blob
-PSProvider    : CodeOwls.PowerShell.AzureBlobStorage\Blob
-PSIsContainer : True
-ServiceClient : Microsoft.WindowsAzure.Storage.Blob.CloudBlobClient
-...
 
 PS blob:\> cd dataout
 PS blob:\dataout> dir
 
-SSItemMode    : d  <
-PSPath        : ...
-PSParentPath  : ...
-PSChildName   : documentwordcounts.txt
-PSDrive       : blob
-PSProvider    : CodeOwls.PowerShell.AzureBlobStorage\Blob
-PSIsContainer : True
-ServiceClient : Microsoft.WindowsAzure.Storage.Blob.CloudBlobClient
-...
+                            Last Modified Type       Name
+----------                  ------------- ----       ----
+d  <                                      Directory  documentwordcounts.txt
+d  <                                      Directory  totalwordcounts.txt
+   <          9/12/2016 3:12:02 AM +00:00 Blob       documentwordcounts.txt
+   <          9/12/2016 3:11:59 AM +00:00 Blob       totalwordcounts.txt
 
-SSItemMode    : d  <
-PSPath        : ...
-PSParentPath  : ...
-PSChildName   : totalwordcounts.txt
-PSDrive       : blob
-PSProvider    : CodeOwls.PowerShell.AzureBlobStorage\Blob
-PSIsContainer : True
-ServiceClient : Microsoft.WindowsAzure.Storage.Blob.CloudBlobClient
-...
-
-SSItemMode                   :    <
-PSPath                       : ...
-PSParentPath                 : ...
-PSChildName                  : documentwordcounts.txt
-PSDrive                      : blob
-PSProvider                   : CodeOwls.PowerShell.AzureBlobStorage\Blob
-PSIsContainer                : False
-StreamWriteSizeInBytes       : 4194304
-...
-
-SSItemMode                   :    <
-PSPath                       : ...
-PSParentPath                 : ...
-PSChildName                  : totalwordcounts.txt
-PSDrive                      : blob
-PSProvider                   : CodeOwls.PowerShell.AzureBlobStorage\Blob
-PSIsContainer                : False
-StreamWriteSizeInBytes       : 4194304
-ServiceClient                : Microsoft.WindowsAzure.Storage.Blob.CloudBlobClient
-StreamMinimumReadSizeInBytes : 4194304
-...
 
 PS blob:\dataout> cd totalwordcounts.txt
 PS blob:\dataout\totalwordcounts.txt> dir
 
-SSItemMode    : d  <
-PSPath        : ...
-PSParentPath  : ...
-PSChildName   : .hive-staging_hive_2016-09-12_03-11-56_447_8455690809408588477-1
-PSDrive       : blob
-PSProvider    : CodeOwls.PowerShell.AzureBlobStorage\Blob
-PSIsContainer : True
-ServiceClient : Microsoft.WindowsAzure.Storage.Blob.CloudBlobClient
-...
 
-SSItemMode                   :    <
-PSPath                       : ...
-PSParentPath                 : ...
-PSChildName                  : .hive-staging_hive_2016-09-12_03-11-56_447_8455690809408588477-1
-PSDrive                      : blob
-PSProvider                   : CodeOwls.PowerShell.AzureBlobStorage\Blob
-PSIsContainer                : False
-StreamWriteSizeInBytes       : 4194304
-...
 
-SSItemMode    :    <
-PSPath        : ...
-PSParentPath  : ...
-PSChildName   : .hive-staging_hive_2016-09-12_03-11-56_447_8455690809408588477-1
-PSDrive       : blob
-PSProvider    : CodeOwls.PowerShell.AzureBlobStorage\Blob
-PSIsContainer : True
-ServiceClient : Microsoft.WindowsAzure.Storage.Blob.CloudBlobClient
-...
-
-SSItemMode                   :    <
-PSPath                       : ...
-PSParentPath                 : ...
-PSChildName                  : 000000_0
-PSDrive                      : blob
-PSProvider                   : CodeOwls.PowerShell.AzureBlobStorage\Blob
-PSIsContainer                : False
-StreamWriteSizeInBytes       : 4194304
-...
+                            Last Modified Type       Name
+----------                  ------------- ----       ----
+d  <                                      Directory  .hive-staging_hive_2016-09-12_03-11-56_447_8455690809408588477-1
+   <          9/12/2016 3:11:58 AM +00:00 Blob       .hive-staging_hive_2016-09-12_03-11-56_447_8455690809408588477-1
+   <                                      Directory  .hive-staging_hive_2016-09-12_03-11-56_447_8455690809408588477-1
+   <          9/12/2016 3:11:59 AM +00:00 Blob       000000_0
 
 PS blob:\dataout\totalwordcounts.txt> $data = get-content ./000000_0 -astext
 PS blob:\dataout\totalwordcounts.txt> $data

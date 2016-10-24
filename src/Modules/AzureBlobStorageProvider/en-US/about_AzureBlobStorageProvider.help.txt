@@ -1,5 +1,5 @@
 ﻿TOPIC
-    about_Dropbox
+    about_AzureBlobProvider
 
 COPYRIGHT
     Copyright (c) 2016 Code Owls LLC, All Rights Reserved.
@@ -28,20 +28,18 @@ LICENSE
 	SOFTWARE.
 
 SHORT DESCRIPTION
-  Provides access to Dropbox services through a PowerShell provider.
+  Provides access to Azure Blob Storage through a PowerShell provider.
 
 LONG DESCRIPTION
-  Provides access to Dropbox services through a PowerShell provider.
+  Provides access to Azure Blob Storage through a PowerShell provider.
 
 QUICK EXAMPLE
-  import-module dropbox
-  new-psdrive -name dbox -psprovider dropbox -root ""
-  ## at this point powershell will ask you to authenticate with
-  ##  dropbox before proceeding
-  cd dbox:
+  import-module azureBlobStorageProvider
+  new-psdrive -name blob -psprovider blob -root "<your connection string>"
+  cd blob:
   dir
 
-SEE ALSO
-    https://github.com/beefarino/PowerShell.Dropbox
-    http://www.codeowls.com/
-    about_Dropbox_Version
+  SEE ALSO
+      https://github.com/beefarino/AzureBlobStorageProvider
+      http://www.codeowls.com/
+      about_AzureBlobProvider_Version
