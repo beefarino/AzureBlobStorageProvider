@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+    <Controls>
+        <Control>
+            <Name>GenericCollection-GroupingFormat</Name>
+                    <CustomControl>
+                        <CustomEntries>
+                            <CustomEntry>
+                                <CustomItem>
+                                    <Frame>
+                                        <LeftIndent>4</LeftIndent>
+                                        <CustomItem>
+                                            <Text>Container: </Text>
+                                            <ExpressionBinding>
+                                                <PropertyName>PSParentPath</PropertyName>
+                                            </ExpressionBinding>
+                                          <NewLine/>
+                                        </CustomItem>
+                                    </Frame>
+                                </CustomItem>
+                            </CustomEntry>
+                        </CustomEntries>
+            </CustomControl>
+        </Control>
+    </Controls>
+    <ViewDefinitions>
+        <View>
+            <Name>BlobDirectory</Name>
+            <ViewSelectedBy>
+                <TypeName>Microsoft.WindowsAzure.Storage.Blob.CloudBlobContainer</TypeName>
+                <TypeName>Microsoft.WindowsAzure.Storage.Blob.CloudBlobDirectory</TypeName>
+                <TypeName>Microsoft.WindowsAzure.Storage.Blob.CloudBlockBlob</TypeName>
+            </ViewSelectedBy>
+            <GroupBy>
+                <PropertyName>PSParentPath</PropertyName>
+                <CustomControlName>GenericCollection-GroupingFormat</CustomControlName>
+            </GroupBy>
+            <TableControl>
+                <TableHeaders>
+                  <TableColumnHeader>
+                    <Width>10</Width>
+                    <Label>          </Label>
+                    <Alignment>Left</Alignment>
+                  </TableColumnHeader>
+                  <TableColumnHeader>
+                    <Width>30</Width>
+                    <Label>Last Modified</Label>
+                    <Alignment>Right</Alignment>
+                  </TableColumnHeader>
+                  <TableColumnHeader>
+                    <Width>10</Width>
+                    <Label>Type</Label>
+                    <Alignment>Left</Alignment>
+                  </TableColumnHeader>
+                  <TableColumnHeader>
+						            <Label>Name</Label>
+                        <Alignment>Left</Alignment>
+                    </TableColumnHeader>
+                </TableHeaders>
+                <TableRowEntries>
+                  <TableRowEntry>
+                        <TableColumnItems>
+                          <TableColumnItem>
+                            <PropertyName>SSItemMode</PropertyName>
+                          </TableColumnItem>
+                          <TableColumnItem>
+                            <ScriptBlock>$_.Properties.LastModified</ScriptBlock>
+                          </TableColumnItem>
+                          <TableColumnItem>
+                            <ScriptBlock>switch -regex ($_.getType().fullName) {
+                              'Blob$' {"Blob"}
+                              'Directory$' {"Directory"}
+                              'Container$' {"Container"}
+                              default { "Unknown" }
+                            }</ScriptBlock>
+                          </TableColumnItem>
+                          <TableColumnItem>
+                                <PropertyName>PSChildName</PropertyName>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+    </ViewDefinitions>
+</Configuration>

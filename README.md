@@ -18,11 +18,10 @@ The format of these connection strings is documented [here](https://azure.micros
 ```
 Drive Root (represents an Azure Storage Account)
 |───BlobContainer
-│   │
 │   └───BlobDirectory
-│       │   BlobBlock
-│       │   BlobBlock
-│       │   ...
+│   |   │   BlobBlock
+│   |   │   BlobBlock
+│   |   │   ...
 ```
 
 ## Currently Supported Operations
